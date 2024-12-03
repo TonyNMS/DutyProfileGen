@@ -23,6 +23,7 @@ function App() {
   
 
 
+  
 
   const handleAddEqu = () =>{
     if (!journeys || journeyPower <= 0 || journeyTime <= 0 || journeypowerVariance < 0) {
