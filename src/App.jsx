@@ -96,6 +96,17 @@ function App() {
       <div className='added-equiment-list'>
         
       </div>
+      <div className='insturction'>
+          <h2>How to Use</h2>
+          <p>1. Select a Journey Name</p>
+          <p>2. Input an Average Power for the Jouney</p>
+          <p>3. Input how long the journey last in minutes</p>
+          <p>4. Input a variance </p>
+          <p>5. Click Add Journey</p>
+          <p>6. To add another jouney, start from Step 1</p>
+          <p>7. To Start another voyage, Click Reset and Start Over</p>
+          <p>8. You can export the power profile by Clicking Export CSV</p>
+      </div>
       <div className='adding-journey'> 
         <h3>Add a Journery</h3>
         <div>
@@ -104,7 +115,7 @@ function App() {
         </div>
         <div>
             <label>Input a Average Power Demand: </label>
-            <input type="number" onChange ={(e)=>setJourneypower(e.target.value)} placeholder='Aveage Power: in kWatt'></input>
+            <input type="number" onChange ={(e)=>setJourneypower(e.target.value)} placeholder='Average Power: in kWatt'></input>
         </div>
         <div>
             <label>Input Journey Time Span in Minutes: </label>
