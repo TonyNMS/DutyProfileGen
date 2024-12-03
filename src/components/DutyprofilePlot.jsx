@@ -37,7 +37,7 @@ const DutyProfilePlot = ({ journeysCollection }) => {
           {
             label: "Power vs Time",
             data: powerData,
-            borderColor: "white",
+            borderColor: "black",
             borderWidth: 0.1,
             tension: 0.1,
             pointRadius: 0,
