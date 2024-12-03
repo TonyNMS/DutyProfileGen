@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
+import DutyProfilePlot from './components/DutyprofilePlot';
+import CSVExported from './components/CSVExported';
 
 function App() {
   const [equipmentCategory, setEquimentCategory] = useState('Enter Category');
@@ -39,6 +40,7 @@ function App() {
   const addJourney = () =>{
     if(journeys === '' || journeyPower === 0 || journeyTime === 0 || journeypowerVariance === 0){
       alert("Make sure to input all field");
+      return;
     }
     const journeyObject = {
       "type" : journeys,
@@ -145,10 +147,14 @@ function App() {
         )}
       </div>
       <div className='dutyProfilePlot'>
-
+        <DutyProfilePlot journeysCollection= {journeysCollection}></DutyProfilePlot>
       </div>
       <div className='exportSection'>
-
+      {journeysCollection.length === 0 ? (
+        <p>Empty Journey Array</p>
+      ) : (
+        <CSVExported journeysCollection={journeysCollection} />
+      )}
       </div>
     </>
   )
