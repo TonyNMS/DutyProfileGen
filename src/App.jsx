@@ -5,15 +5,16 @@ import DutyProfilePlot from './components/DutyprofilePlot';
 import CSVExported from './components/CSVExported';
 
 function App() {
-  const [equipmentCategory, setEquimentCategory] = useState('Enter Category');
-  const [equipmentCollection, setEquipmentCollection] = useState([]);
-  const [euqName, setEuqName] = useState('');
+  const [equipmentCategory, setEquimentCategory] = useState('');
   const [powerRating, setPowerRating] =  useState(0);
   const [quantity, setQuantity] = useState(0);
-
+  const [equipmentCollection, setEquipmentCollection] = useState([]);
+  const [euqName, setEuqName] = useState('');
+  
 
   const [journeys, setJourneys] = useState('');
   const [journeyPower, setJourneypower] = useState(0);
+  const [journeyPower2, setJourneypower2] = useState(0);
   const [journeypowerVariance, setJourneypowerVariance] = useState(0);
   const [journeysCollection, setJourneysCollection] = useState([]);
   const [journeyTime, setJourneyTime] = useState(0);
@@ -26,7 +27,7 @@ function App() {
   
 
   const handleAddEqu = () =>{
-    if (!journeys || journeyPower <= 0 || journeyTime <= 0 || journeypowerVariance < 0) {
+    if (!euqName || powerRating <= 0 || quantity <= 0 || !equipmentCategory) {
       alert("Please fill all fields with valid values.");
       return;
     }
@@ -43,17 +44,17 @@ function App() {
       alert("Make sure to input all field");
       return;
     }
+    
     const journeyObject = {
       "type" : journeys,
       "avg_pwr" : journeyPower,
+      "avg_pwr2" : journeyPower2,
+      "avg_combi" : journeyPower + journeyPower2,
       "var" : journeypowerVariance,
       "time_span" : journeyTime
     }
+    console.log(journeyObject.avg_combi);
     setJourneysCollection([...journeysCollection, journeyObject]);
-    setJourneys('');
-    setJourneypower(0);
-    setJourneypowerVariance(0);
-    setJourneyTime(0);
   }
   const displayEquipmentOptions = () =>{
     return Categories.map((stat, index)=>{
@@ -71,15 +72,15 @@ function App() {
         <h3>Add a Power Consumption Device</h3>
         <div>
             <label>Equipment Name:</label>
-            <input type="text" placeholder="Enter Equipment Name" />   
+            <input type="text" placeholder="Enter Equipment Name" onChange={e=>setEuqName(e.target.value)}/>   
         </div>
         <div>
             <label>Rated Power:</label>
-            <input type="number" placeholder="Enter Ship Name" />   
+            <input type="number" placeholder="Enter Equipment Rated Power" onChange={e=>setPowerRating(e.target.value)}/>   
         </div>
         <div>
             <label>Quantity:</label>
-            <input type="number" placeholder="Enter Ship Name" />   
+            <input type="number" placeholder="Enter Equipement Quantity" onChange={e=>setQuantity(e.target.value)}/>   
         </div>
         <div>
             <label>Category:</label>
@@ -87,7 +88,39 @@ function App() {
         </div>
         <div>
             <button onClick={handleAddEqu}>Add Equipment</button>
+            <button onClick={handleRestList}>Reset Equipment List</button>
         </div>
+        
+      </div>
+    )
+  }
+  const handleRestList = () =>{
+    setEquipmentCollection([]);
+  }
+  const returnEquList = () =>{
+    return(
+      <div className='equipList'>
+          <h3>Equipment List</h3>
+          {equipmentCollection.length > 0 ? (
+            <table>
+              <thead>
+                  <tr>
+                    <td>Equipment Name</td><td>Category</td><td>Equipment Rated Power</td><td>Equipment Quantity</td>
+                  </tr>
+              </thead>
+              <tbody>
+                  {equipmentCollection.map((item, index)=>
+                    <tr key={`equp-${index}`}>
+                      <td>{item.equName}</td>
+                      <td>{item.equipment}</td>
+                      <td>{item.powerRating}</td>
+                      <td>{item.quantity}</td>
+                    </tr>
+                  ) }
+              </tbody>
+            </table>
+          ):(<p>No Equipemnt List Added Yets</p>)
+          }
       </div>
     )
   }
@@ -97,35 +130,29 @@ function App() {
       <div className='added-equiment-list'>
         
       </div>
-      <div className='insturction'>
-          <h2>How to Use</h2>
-          <p>1. Select a Journey Name</p>
-          <p>2. Input an Average Power for the Jouney</p>
-          <p>3. Input how long the journey last in minutes</p>
-          <p>4. Input a variance </p>
-          <p>5. Click Add Journey</p>
-          <p>6. To add another jouney, start from Step 1</p>
-          <p>7. To Start another voyage, Click Reset and Start Over</p>
-          <p>8. You can export the power profile by Clicking Export CSV</p>
-      </div>
+      {
+        /**
+          <div className = 'add-equp'>
+            <h3>Add Equipment</h3>
+            {returnEquipmentSection()}
+            {returnEquList()}
+
+          </div>
+         */
+      }
+      
       <div className='adding-journey'> 
         <h3>Add a Journery</h3>
-        <div>
-            <label>Select a Journery: </label>
-            <select onChange= {e=>setJourneys(e.target.value )}>{displayJourneyOptions()}</select>
-        </div>
-        <div>
-            <label>Input a Average Power Demand: </label>
-            <input type="number" onChange ={(e)=>setJourneypower(e.target.value)} placeholder='Average Power: in kWatt'></input>
-        </div>
-        <div>
-            <label>Input Journey Time Span in Minutes: </label>
-            <input type ='number'onChange = {(e)=>setJourneyTime(e.target.value)} placeholder='Time Span: in Minutes'></input>
-        </div>
-        <div>
-            <lable>input a Power Demand Variance %: </lable>
-            <input type='number' onChange = {(e)=>setJourneypowerVariance(e.target.value)}placeholder = 'Variance: '></input>
-        </div>
+       
+        <table className='select-table'>
+          <tbody>
+            <tr><td>Select a Journery:</td><td><select onChange= {e=>setJourneys(e.target.value )}>{displayJourneyOptions()}</select></td></tr>
+            <tr><td>Input an Average Power Demand 1 :</td><td><input type="number" onChange ={(e)=>setJourneypower(Number(e.target.value))} placeholder='Average Power: in kWatt'></input></td></tr>
+            <tr><td>Input an Averge Power Demand 2 :</td><td><input type = "number" onChange={(e)=>setJourneypower2(Number(e.target.value))} placeholder='Average Power: in kWatt'></input></td></tr>
+            <tr><td>Input Journey Time Span in Minutes:</td><td><input type ='number'onChange = {(e)=>setJourneyTime(e.target.value)} placeholder='Time Span: in Minutes'></input></td></tr>
+            <tr><td>Input a Power Demand Variance %:</td><td><input type='number' onChange = {(e)=>setJourneypowerVariance(e.target.value)}placeholder = 'Variance: '></input></td></tr>
+          </tbody>
+        </table>
         <div>
           <button onClick={addJourney}>Add Journey!</button>
           <button onClick={()=>{setJourneysCollection([])}}>Reset</button>
@@ -139,6 +166,8 @@ function App() {
               <tr>
                 <th>Type</th>
                 <th>Average Power (kW)</th>
+                <th>Average Power 2 (kw)</th>
+                <th>Average Power Combined (kw)</th>
                 <th>Variance (%)</th>
                 <th>Time Span (Minutes)</th>
               </tr>
@@ -148,6 +177,8 @@ function App() {
                 <tr key={index}>
                   <td>{journey.type}</td>
                   <td>{journey.avg_pwr}</td>
+                  <td>{journey.avg_pwr2}</td>
+                  <td>{journey.avg_combi}</td>
                   <td>{journey.var}</td>
                   <td>{journey.time_span}</td>
                 </tr>
